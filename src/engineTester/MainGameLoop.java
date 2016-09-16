@@ -62,8 +62,8 @@ public class MainGameLoop {
         lights.add(sun);
         
         MasterRenderer renderer = new MasterRenderer(loader);
-        RawModel wormModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
-        TexturedModel wormTexturedModel = new TexturedModel(wormModel, new ModelTexture(
+        RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
+        TexturedModel wormTexturedModel = new TexturedModel(soldierModel, new ModelTexture(
                 loader.loadTexture("Wormpng")));
         
         List<Player> players = new ArrayList<>();
