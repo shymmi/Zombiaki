@@ -9,9 +9,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
-import entities.Camera;
-import entities.Light;
-import entities.Player;
+import entities.*;
 import models.TexturedModel;
 import shaders.StaticShader;
 import shaders.TerrainShader;
@@ -40,6 +38,7 @@ public class MasterRenderer {
 	private SkyboxRenderer skyboxRenderer;
 
 	private Map<TexturedModel, List<Player>> entities = new HashMap<>();
+        private Map<TexturedModel, List<Tree>> treesEntities = new HashMap<>();
 	private Map<TexturedModel, List<Player>> normalMapEntities = new HashMap<>();
 	private List<Terrain> terrains = new ArrayList<>();
 
@@ -56,12 +55,15 @@ public class MasterRenderer {
 	}
 
 	public void renderScene(List<Player> entities, List<Terrain> terrains, List<Light> lights,
-			Camera camera) {
+			Camera camera, List<Tree> trees) {
 		for (Terrain terrain : terrains) {
 			processTerrain(terrain);
 		}
 		for (Player entity : entities) {
 			processEntity(entity);
+		}
+                for (Tree t : trees) {
+			processEntity(t);
 		}
                 
 		render(lights, camera);
@@ -73,6 +75,7 @@ public class MasterRenderer {
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
+                renderer.renderTrees(treesEntities);
 		shader.stop();
 		terrainShader.start();
 		terrainShader.loadLights(lights);
@@ -108,6 +111,17 @@ public class MasterRenderer {
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
+	}
+        public void processEntity(Tree entity) {
+            TexturedModel entityModel = entity.getModel();
+            List<Tree> batch = treesEntities.get(entityModel);
+            if (batch != null) {
+                    batch.add(entity);
+            } else {
+                    List<Tree> newBatch = new ArrayList<>();
+                    newBatch.add(entity);
+                    treesEntities.put(entityModel, newBatch);
+            }
 	}
 	
 	public void processNormalMapEntity(Player entity) {
