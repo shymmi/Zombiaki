@@ -18,8 +18,8 @@ import toolbox.Maths;
 
 public class Terrain {
 
-    private static final float SIZE = 1500;
-    private static final float MAX_HEIGHT = 20;
+    public static final float SIZE = 500;
+    private static final float MAX_HEIGHT = 10;
     private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
     private float x;

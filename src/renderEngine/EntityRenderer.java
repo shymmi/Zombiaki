@@ -15,7 +15,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.Maths;
-import entities.Player;
+import entities.*;
 
 public class EntityRenderer {
 
@@ -40,6 +40,21 @@ public class EntityRenderer {
 			unbindTexturedModel();
 		}
 	}
+        
+        public void renderTrees(Map<TexturedModel, List<Tree>> entities) {
+            for (TexturedModel model : entities.keySet()) {
+                    prepareTexturedModel(model);
+                    List<Tree> batch = entities.get(model);
+                    for (Tree entity : batch) {
+                            prepareInstance(entity);
+                            GL11.glDrawElements(GL11.GL_3D, model.getRawModel().getVertexCount(),
+                                            GL11.GL_UNSIGNED_INT, 0);
+                    }
+                    unbindTexturedModel();
+            }
+	}
+        
+        
 
 	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
@@ -67,6 +82,12 @@ public class EntityRenderer {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
+	}
+        
+        private void prepareInstance(Tree entity) {
+            Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
+                            entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+            shader.loadTransformationMatrix(transformationMatrix);
 	}
 
 }

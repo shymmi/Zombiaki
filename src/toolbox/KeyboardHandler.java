@@ -23,10 +23,10 @@ public class KeyboardHandler {
     private int checkInputs() {      
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
-                if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
-                    turn = (turn+1)%2;		
-                    System.out.println("turn: " + turn);
-                }
+//                if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
+//                    turn = (turn+1)%2;		
+//                    System.out.println("turn: " + turn);
+//                }
             }
             /*else {    
                 if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {

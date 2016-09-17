@@ -9,14 +9,13 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import entities.Camera;
-import entities.Light;
-import entities.Player;
+import entities.*;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
 import guis.GuiRenderer;
 import guis.GuiTexture;
+import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.DisplayManager;
@@ -62,23 +61,37 @@ public class MainGameLoop {
         lights.add(sun);
         
         MasterRenderer renderer = new MasterRenderer(loader);
+        
+        //drzewo
+        RawModel treeModel = OBJLoader.loadObjModel("DeadTree", loader); 
+        TexturedModel treeTextureModel = new TexturedModel(treeModel, new ModelTexture(
+                loader.loadTexture("mud")));    
+        
+        List<Tree> trees = new ArrayList<>();
+        int treesNumber = 100;
+        for (int i=0; i<treesNumber; i++) 
+        {   
+            Random generator = new Random();
+            float randX = generator.nextInt((int)terrain.SIZE) + 5;
+            float randZ = (generator.nextInt((int)terrain.SIZE) + 5)*-1;
+            float scale = generator.nextInt(4) + 0.5f;
+            float rotation = generator.nextInt(180);
+            Tree firstTree = new Tree(0, treeTextureModel, new Vector3f(randX, terrain.getHeightOfTerrain(randX, randZ), randZ), rotation, scale);
+            trees.add(firstTree);
+        }
+        
+        
         RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
         TexturedModel wormTexturedModel = new TexturedModel(soldierModel, new ModelTexture(
                 loader.loadTexture("Wormpng")));
         
         List<Player> players = new ArrayList<>();
-        //Player[] players = new Player[2];            //(dlugosc, wysokosc, szerokosc)
         
         Player tmpPlayer = new Player(0, wormTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
         players.add(tmpPlayer);
-        tmpPlayer = new Player(1, wormTexturedModel, new Vector3f(140, 5, -75), 0, 270, 0, 0.6f, 100);
-        players.add(tmpPlayer);
-        //entities.add(players[0]);
-        //entities.add(players[1]);
 
-        Camera[] cameras = new Camera[2];
-        cameras[0] = new Camera(players.get(0));
-        cameras[1] = new Camera(players.get(1));        
+        Camera[] cameras = new Camera[1];
+        cameras[0] = new Camera(players.get(0));     
         
         List<GuiTexture> guiTextures = new ArrayList<>();
         GuiTexture crosshair = new GuiTexture(loader.loadTexture("crosshair"), new Vector2f(0.02f, 0.2f), new Vector2f(0.05f, 0.1f));
@@ -87,7 +100,6 @@ public class MainGameLoop {
 
         MousePicker[] pickers = new MousePicker[2];
         pickers[0] = new MousePicker(cameras[0], renderer.getProjectionMatrix(), terrain);
-        pickers[1] = new MousePicker(cameras[1], renderer.getProjectionMatrix(), terrain);
 
         int turn = 0;
         tmpPlayer = players.get(turn);
@@ -96,10 +108,8 @@ public class MainGameLoop {
 
         KeyboardHandler keyboard = new KeyboardHandler();
 
-        GUIText worm1Text = new GUIText(players.get(0).getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
-        worm1Text.setColour(1, 1, 0);
-        GUIText worm2Text = new GUIText(players.get(1).getHP() + " HP", 3f, font, new Vector2f(0.85f, 0.9f), 1f, false);
-        worm2Text.setColour(1, 1, 0);
+        GUIText SoldierText = new GUIText(players.get(0).getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
+        SoldierText.setColour(1, 1, 0);
 
         while (!Display.isCloseRequested()) {
             turn = keyboard.getTurn();
@@ -113,7 +123,7 @@ public class MainGameLoop {
 
             camera.move();
             picker.update();
-            renderer.renderScene(players, terrains, lights, camera);
+            renderer.renderScene(players, terrains, lights, camera, trees);
             guiRenderer.render(guiTextures);
             TextMaster.render();
 
