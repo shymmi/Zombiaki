@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Random;
 import models.TexturedModel;
 
 import org.lwjgl.input.Keyboard;
@@ -15,10 +16,9 @@ public class Enemy {
     private Vector3f position;
     private float rotX, rotY, rotZ;
     private float scale;
-    private static final float RUN_SPEED = 40;
+    private static final float RUN_SPEED = 20;
     //private static final float TURN_SPEED = 160;
     private static final float GRAVITY = -50;
-    private static final float JUMP_POWER = 18;
 
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
@@ -62,7 +62,6 @@ public class Enemy {
     }
 
     public void increaseRotation(float dx, float dy, float dz) {
-
         this.rotX += dx;
         this.rotY += dy;
         this.rotZ += dz;
@@ -128,31 +127,56 @@ public class Enemy {
         this.attacked = false;
     }
 
-    public void move(Terrain terrain, int turn) {
-        this.currentSpeed = 0;
-        this.currentTurnSpeed = 0;
-        if (turn == ID) {
-            setSpeed();
-        }
+    public void moveToPlayer(Terrain terrain, Player player) {
+               
+        this.currentSpeed = 5;
+        this.currentTurnSpeed = 1;
+        
+        // setSpeed();
 
         //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-        float zDistance = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+        //float zDistance = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+        
         //float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
         //float dz = (float) (zDistance * Math.sin(Math.toRadians(super.getRotY())));
         //float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
         //if (dx != 0 || dz != 0)
         //System.out.println("dx " + dx + " dz " + dz);
-        //System.out.println("x " + super.getPosition().x + " y " + super.getPosition().y + " z " + super.getPosition().z);
+        System.out.println("ENEMY; x " + position.x + " y " + position.y + " z " + position.z);
         
+        float player_x = player.getPosition().x;
+        float player_z = player.getPosition().z;
         
+        float alien_x = position.x;
+        float alien_z = position.z;
         
-        increasePosition(distance, 0, zDistance);
+        if (Math.abs(alien_x - player_x) < 1 && Math.abs(alien_z - player_z) < 1) {
+            player.takeWound();
+        }
+        
+        if (alien_x < player_x) {
+            if (alien_z < player_z) {
+                increasePosition(distance, 0, distance);
+            }
+            else {
+                increasePosition(distance, 0, -distance);
+            }
+        }
+        else {
+            if (alien_z < player_z) {
+                increasePosition(-distance, 0, distance);
+            }
+            else {
+                increasePosition(-distance, 0, -distance);
+            }
+        }
+
         //float x = super.getPosition().x;
         //float y = super.getPosition().y;
         //float z = super.getPosition().z;
-        System.out.println(getPosition());
+        //System.out.println(getPosition());
 
         //super.increasePosition(dx, 0, dz);
         upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
@@ -170,25 +194,26 @@ public class Enemy {
     }
 
     private void setSpeed() {
-//        float rotY = getRotY();
-//        while (rotY > 360) {
-//            rotY -= 360;
-//        }
-//        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-//            currentSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-//            currentTurnSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
-//        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-//            currentSpeed = -(float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-//            currentTurnSpeed = -(float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
-//        } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-//            currentTurnSpeed = (float) -(RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-//            currentSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
-//        } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-//            currentTurnSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-//            currentSpeed = (float) -(RUN_SPEED * Math.cos(Math.toRadians(rotY)));
-//        } else {
-//            this.currentTurnSpeed = 0;
-//        }
+        float rotY = getRotY();
+        
+        while (rotY > 360) {
+            rotY -= 360;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+            currentSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            currentTurnSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            currentSpeed = -(float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            currentTurnSpeed = -(float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+            currentTurnSpeed = (float) -(RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            currentSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+            currentTurnSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            currentSpeed = (float) -(RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+        } else {
+            this.currentTurnSpeed = 0;
+        }
 //
 //        //System.out.println("x " + currentSpeed + " z " +  currentTurnSpeed + " rotY " + rotY);
 //        if (Mouse.isButtonDown(0)) {

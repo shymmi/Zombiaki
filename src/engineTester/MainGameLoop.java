@@ -128,10 +128,21 @@ public class MainGameLoop {
 
         KeyboardHandler keyboard = new KeyboardHandler();
 
-        GUIText hpText = new GUIText(players.get(0).getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
-        hpText.setColour(1, 1, 0);
+
 
         while (!Display.isCloseRequested()) {
+            GUIText hpText;
+            GUIText enemiesLeft = new GUIText("Enemies left: " + enemies.size(), 3f, font, new Vector2f(0f, 0f), 1f, false);
+            enemiesLeft.setColour(1, 0, 0);
+            
+            if(players.get(0).getHP() > 0) {
+                hpText = new GUIText(players.get(0).getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
+                hpText.setColour(1, 1, 0);
+            } else {
+                hpText = new GUIText("You were weak! Try again.", 3f, font, new Vector2f(0.3f, 0.5f), 1f, false);
+                hpText.setColour(1, 1, 0);
+            }
+            
             tmpPlayer = players.get(0);
             camera = cameras[0];
             picker = pickers[0];
@@ -139,14 +150,21 @@ public class MainGameLoop {
             for(Player player : players){
                 player.move(terrain);
             }
-
+            
+            for(Enemy e : enemies) {
+                e.moveToPlayer(terrain, players.get(0));
+            }
+                
             camera.move();
             picker.update();
+
             renderer.renderScene(players, terrains, lights, camera, trees, enemies);
             guiRenderer.render(guiTextures);
             TextMaster.render();
 
             DisplayManager.updateDisplay();
+            hpText.remove();
+
         }
 
         //*********Clean Up Below**************

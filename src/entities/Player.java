@@ -1,9 +1,11 @@
 package entities;
 
+import fontMeshCreator.GUIText;
 import models.TexturedModel;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.DisplayManager;
@@ -12,7 +14,7 @@ import terrains.Terrain;
 public class Player {
 
     private TexturedModel model;
-    private Vector3f position;
+    public Vector3f position;
     private float rotX, rotY, rotZ;
     private float scale;
     private static final float RUN_SPEED = 40;
@@ -143,7 +145,7 @@ public class Player {
         //float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
         //if (dx != 0 || dz != 0)
         //System.out.println("dx " + dx + " dz " + dz);
-        //System.out.println("x " + super.getPosition().x + " y " + super.getPosition().y + " z " + super.getPosition().z);
+        System.out.println("PLAYER; x " + position.x + " y " + position.y + " z " + position.z);
         
         
         
@@ -151,7 +153,7 @@ public class Player {
         //float x = super.getPosition().x;
         //float y = super.getPosition().y;
         //float z = super.getPosition().z;
-        System.out.println(getPosition());
+//        System.out.println(getPosition());
 
         //super.increasePosition(dx, 0, dz);
         upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
@@ -214,6 +216,13 @@ public class Player {
     private void attack() {
 
         System.out.println(this.ID + " atakuje");
+    }
+    
+    public void takeWound() {
+        System.out.println("HP: " + this.HP);
+        if(this.HP >= 5) {
+            this.HP -= 5;
+        } 
     }
 
 }

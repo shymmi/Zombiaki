@@ -13,7 +13,7 @@ import fontRendering.TextMaster;
  */
 public class GUIText {
 
-	private String textString;
+	public String textString;
 	private float fontSize;
 
 	private int textMeshVao;
