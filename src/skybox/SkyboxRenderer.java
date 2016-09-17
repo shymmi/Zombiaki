@@ -13,7 +13,7 @@ import entities.Camera;
 
 public class SkyboxRenderer {
 	
-	private static final float SIZE = 200f;
+	private static final float SIZE = 700f;
 	
 	private static final float[] VERTICES = {        
 	    -SIZE,  SIZE, -SIZE,
@@ -59,14 +59,17 @@ public class SkyboxRenderer {
 	     SIZE, -SIZE,  SIZE
 	};
 	
+        private static String[] TEXTURE_FILES = {"right", "left", "top", "bottom", "back", "front"};
 	private RawModel cube;
+        private int texture;
 	private SkyboxShader shader;
 	
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix){
 		cube = loader.loadToVAO(VERTICES, 3);
+                texture = loader.loadCubeMap(TEXTURE_FILES);
 		shader = new SkyboxShader();
 		shader.start();
-		shader.connectTextureUnits();
+		//shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
@@ -77,19 +80,21 @@ public class SkyboxRenderer {
 		shader.loadFogColour(r, g, b);
 		GL30.glBindVertexArray(cube.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
-		bindTextures();
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture);
+                ///bindTextures();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		shader.stop();
 	}
 	
-	private void bindTextures(){
-		float blendFactor = 0.0f;			
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		shader.loadBlendFactor(blendFactor);
-	}
+//	private void bindTextures(){
+//		float blendFactor = 0.0f;			
+//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+//		shader.loadBlendFactor(blendFactor);
+//	}
 	
 	
 	

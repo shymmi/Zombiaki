@@ -18,13 +18,13 @@ import terrains.Terrain;
 
 public class MasterRenderer {
 
-	private static final float FOV = 70;
+	private static final float FOV = 60;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
 
 	public static final float RED = 0.1f;
-	public static final float GREEN = 0.4f;
-	public static final float BLUE = 0.2f;
+	public static final float GREEN = 0.1f;
+	public static final float BLUE = 0.1f;
 
 	private Matrix4f projectionMatrix;
 
@@ -34,7 +34,6 @@ public class MasterRenderer {
 	private TerrainRenderer terrainRenderer;
 	private TerrainShader terrainShader = new TerrainShader();
 	
-
 	private SkyboxRenderer skyboxRenderer;
 
 	private Map<TexturedModel, List<Player>> entities = new HashMap<>();
