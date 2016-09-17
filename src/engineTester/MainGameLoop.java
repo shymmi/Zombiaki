@@ -39,7 +39,7 @@ public class MainGameLoop {
 
         FontType font = new FontType(loader.loadTexture("harrington"), new File("res/harrington.fnt"));
 
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
+        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("mud"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
@@ -80,6 +80,22 @@ public class MainGameLoop {
             
             Tree tree = new Tree(0, treeTextureModel, new Vector3f(randx, terrain.getHeightOfTerrain(randx, randz), randz), rot, scale);
             trees.add(tree);
+        }
+        
+        RawModel enemyModel = OBJLoader.loadObjModel("Alien", loader);        
+        TexturedModel enemyTextureModel = new TexturedModel(enemyModel, new ModelTexture(
+                loader.loadTexture("grassy2")));
+        
+        List<Enemy> enemies = new ArrayList<>();
+        int enemyCount = 20;
+        for (int i=0; i<enemyCount; i++)
+        {   
+            Random rand = new Random();
+            float randx = rand.nextInt((int)terrain.SIZE) + 1;
+            float randz = (rand.nextInt((int)terrain.SIZE) * -1) - 1;
+            float rot = rand.nextInt(180);
+            Enemy enemy = new Enemy(i, enemyTextureModel, new Vector3f(randx, terrain.getHeightOfTerrain(randx, randz), randz), rot, 5, 100);
+            enemies.add(enemy);
         }
 
         MasterRenderer renderer = new MasterRenderer(loader);
@@ -129,7 +145,7 @@ public class MainGameLoop {
 
             camera.move();
             picker.update();
-            renderer.renderScene(players, terrains, lights, camera, trees);
+            renderer.renderScene(players, terrains, lights, camera, trees, enemies);
             guiRenderer.render(guiTextures);
             TextMaster.render();
 

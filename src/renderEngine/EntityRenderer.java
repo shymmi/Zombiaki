@@ -41,6 +41,19 @@ public class EntityRenderer {
 		}
 	}
         
+        public void renderEnemy(Map<TexturedModel, List<Enemy>> entities) {
+		for (TexturedModel model : entities.keySet()) {
+			prepareTexturedModel(model);
+			List<Enemy> batch = entities.get(model);
+			for (Enemy entity : batch) {
+				prepareInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
+						GL11.GL_UNSIGNED_INT, 0);
+			}
+			unbindTexturedModel();
+		}
+	}
+        
         public void renderTrees(Map<TexturedModel, List<Tree>> entities) {
             for (TexturedModel model : entities.keySet()) {
                     prepareTexturedModel(model);
@@ -83,6 +96,12 @@ public class EntityRenderer {
 	}
         
         private void prepareInstance(Tree entity) {
+            Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
+                            entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+            shader.loadTransformationMatrix(transformationMatrix);
+	}
+        
+        private void prepareInstance(Enemy entity) {
             Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
                             entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
             shader.loadTransformationMatrix(transformationMatrix);

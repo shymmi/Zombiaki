@@ -36,6 +36,7 @@ public class MasterRenderer {
 	
 	private SkyboxRenderer skyboxRenderer;
 
+        private Map<TexturedModel, List<Enemy>> enemyEntities = new HashMap<>();
 	private Map<TexturedModel, List<Player>> entities = new HashMap<>();
         private Map<TexturedModel, List<Tree>> treesEntities = new HashMap<>();
 	private Map<TexturedModel, List<Player>> normalMapEntities = new HashMap<>();
@@ -54,7 +55,7 @@ public class MasterRenderer {
 	}
 
 	public void renderScene(List<Player> entities, List<Terrain> terrains, List<Light> lights,
-			Camera camera, List<Tree> trees) {
+			Camera camera, List<Tree> trees, List<Enemy> enemies) {
 		for (Terrain terrain : terrains) {
 			processTerrain(terrain);
 		}
@@ -63,6 +64,9 @@ public class MasterRenderer {
 		}
                 for (Tree t : trees) {
 			processEntity(t);
+		}
+                for (Enemy e : enemies) {
+			processEntity(e);
 		}
                 
 		render(lights, camera);
@@ -75,6 +79,7 @@ public class MasterRenderer {
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
                 renderer.renderTrees(treesEntities);
+                renderer.renderEnemy(enemyEntities);
 		shader.stop();
 		terrainShader.start();
 		terrainShader.loadLights(lights);
@@ -111,6 +116,19 @@ public class MasterRenderer {
 			entities.put(entityModel, newBatch);
 		}
 	}
+        
+        public void processEntity(Enemy entity) {
+		TexturedModel entityModel = entity.getModel();
+		List<Enemy> batch = enemyEntities.get(entityModel);
+		if (batch != null) {
+			batch.add(entity);
+		} else {
+			List<Enemy> newBatch = new ArrayList<>();
+			newBatch.add(entity);
+			enemyEntities.put(entityModel, newBatch);
+		}
+	}
+        
         public void processEntity(Tree entity) {
             TexturedModel entityModel = entity.getModel();
             List<Tree> batch = treesEntities.get(entityModel);
