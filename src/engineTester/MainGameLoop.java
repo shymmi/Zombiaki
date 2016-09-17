@@ -73,8 +73,8 @@ public class MainGameLoop {
         for (int i=0; i<treesCount; i++)
         {   
             Random rand = new Random();
-            float randx = rand.nextInt((int)terrain.SIZE);
-            float randz = rand.nextInt((int)terrain.SIZE) * -1;
+            float randx = rand.nextInt((int)terrain.SIZE) + 1;
+            float randz = (rand.nextInt((int)terrain.SIZE) * -1) - 1;
             float scale = rand.nextInt(3) + 1.5f;
             float rot = rand.nextInt(180);
             
