@@ -123,10 +123,8 @@ public class MainGameLoop {
         MousePicker[] pickers = new MousePicker[1];
         pickers[0] = new MousePicker(cameras[0], renderer.getProjectionMatrix(), terrain);
 
-        int turn = 0;
-        tmpPlayer = players.get(turn);
-        Camera camera = cameras[turn];
-        MousePicker picker = pickers[turn];
+        Camera camera = cameras[0];
+        MousePicker picker = pickers[0];
 
         KeyboardHandler keyboard = new KeyboardHandler();
 
@@ -134,13 +132,12 @@ public class MainGameLoop {
         hpText.setColour(1, 1, 0);
 
         while (!Display.isCloseRequested()) {
-            turn = keyboard.getTurn();
-            tmpPlayer = players.get(turn);
-            camera = cameras[turn];
-            picker = pickers[turn];
+            tmpPlayer = players.get(0);
+            camera = cameras[0];
+            picker = pickers[0];
 
             for(Player player : players){
-                player.move(terrain, turn);
+                player.move(terrain);
             }
 
             camera.move();

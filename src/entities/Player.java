@@ -129,13 +129,11 @@ public class Player {
         this.attacked = false;
     }
 
-    public void move(Terrain terrain, int turn) {
+    public void move(Terrain terrain) {
         this.currentSpeed = 0;
         this.currentTurnSpeed = 0;
-        if (turn == ID) {
-            setSpeed();
-        }
-
+        setSpeed();
+        
         //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
