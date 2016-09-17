@@ -75,10 +75,10 @@ public class MainGameLoop {
             Random rand = new Random();
             float randx = rand.nextInt((int)terrain.SIZE);
             float randz = rand.nextInt((int)terrain.SIZE) * -1;
-            float scale = rand.nextInt(2) + 0.5f;
+            float scale = rand.nextInt(3) + 1.5f;
             float rot = rand.nextInt(180);
             
-            Tree tree = new Tree(0, treeTextureModel, new Vector3f(randx, terrain.getHeightOfTerrain(randx, randz), randz), 90, 4);
+            Tree tree = new Tree(0, treeTextureModel, new Vector3f(randx, terrain.getHeightOfTerrain(randx, randz), randz), rot, scale);
             trees.add(tree);
         }
 

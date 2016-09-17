@@ -13,7 +13,7 @@ import entities.Camera;
 
 public class SkyboxRenderer {
 	
-	private static final float SIZE = 700f;
+	private static final float SIZE = 600f;
 	
 	private static final float[] VERTICES = {        
 	    -SIZE,  SIZE, -SIZE,
@@ -59,7 +59,7 @@ public class SkyboxRenderer {
 	     SIZE, -SIZE,  SIZE
 	};
 	
-        private static String[] TEXTURE_FILES = {"right", "left", "top", "bottom", "back", "front"};
+        private static String[] TEXTURE_FILES = {"blood-valley_rt", "blood-valley_lf", "blood-valley_up", "blood-valley_dn", "blood-valley_bk", "blood-valley_ft"};
 	private RawModel cube;
         private int texture;
 	private SkyboxShader shader;
