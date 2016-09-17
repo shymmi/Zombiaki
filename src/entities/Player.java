@@ -1,6 +1,7 @@
 package entities;
 
 import fontMeshCreator.GUIText;
+import java.util.List;
 import models.TexturedModel;
 
 import org.lwjgl.input.Keyboard;
@@ -199,23 +200,25 @@ public class Player {
         }
 
         //System.out.println("x " + currentSpeed + " z " +  currentTurnSpeed + " rotY " + rotY);
-        if (Mouse.isButtonDown(0)) {
-            if (!attacked) {
-                attacked = true;
-                attack();
-            }
-        }
-
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             jump();
 
         }
 
     }
-
-    private void attack() {
-
-        System.out.println(this.ID + " atakuje");
+    
+    public void kill(List<Enemy> aliens) {
+        if (Mouse.isButtonDown(0)) {
+            float killZ = position.z + (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
+            float killX = position.x + (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
+            System.out.println("killZ: " + killZ);
+            System.out.println("killX: " + killX);
+            for(Enemy a : aliens) {
+                if (Math.abs(a.getPosition().x - killX) < 100 && Math.abs(a.getPosition().z - killZ) < 100) {
+                    a.setScale(1f);
+                }
+            }
+        }
     }
     
     public void takeWound() {

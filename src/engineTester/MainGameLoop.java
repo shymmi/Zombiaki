@@ -149,6 +149,7 @@ public class MainGameLoop {
 
             for(Player player : players){
                 player.move(terrain);
+                player.kill(enemies);
             }
             
             for(Enemy e : enemies) {
