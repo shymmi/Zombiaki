@@ -24,7 +24,7 @@ public class Player {
     //private static final float TURN_SPEED = 160;
     private static final float GRAVITY = -50;
     private static final float JUMP_POWER = 18;
-    private static final int DAMAGE = 20;
+    private static final int DAMAGE = 2;
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
     private float upwardsSpeed = 0;

@@ -46,9 +46,11 @@ public class EntityRenderer {
 			prepareTexturedModel(model);
 			List<Enemy> batch = entities.get(model);
 			for (Enemy entity : batch) {
-				prepareInstance(entity);
+                            if(entity.getHP() > 0) {
+                                prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
 						GL11.GL_UNSIGNED_INT, 0);
+                            }
 			}
 			unbindTexturedModel();
 		}

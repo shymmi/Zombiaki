@@ -238,9 +238,8 @@ public class Enemy {
 
     }
 
-    private void attack() {
-
-        System.out.println(this.ID + " atakuje");
+    private void die() {
+        
     }
 
 }
