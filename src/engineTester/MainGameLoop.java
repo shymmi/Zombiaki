@@ -89,7 +89,7 @@ public class MainGameLoop {
         //TexturedModel frozenEnemy = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("ice")));
         
         List<Enemy> enemies = new ArrayList<>();
-        int enemyCount = 20;
+        int enemyCount = 2;
         for (int i=0; i<enemyCount; i++)
         {   
             Random rand = new Random();
@@ -143,6 +143,11 @@ public class MainGameLoop {
             } else {
                 hpText = new GUIText("You were weak! Try again.", 3f, font, new Vector2f(0.3f, 0.5f), 1f, false);
                 hpText.setColour(1, 1, 0);
+            }
+            
+            if(players.get(0).getHP() > 0 && enemies.size() == 0) {
+                    GUIText youWinMessage = new GUIText("You win!", 3f, font, new Vector2f(0.45f, 0.5f), 1f, false);
+                    youWinMessage.setColour(1, 0, 0);
             }
             
             tmpPlayer = players.get(0);
