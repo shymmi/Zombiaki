@@ -18,6 +18,9 @@ import guis.GuiTexture;
 import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
+import particles.Particle;
+import particles.ParticleMaster;
+import particles.ParticleSystem;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -36,7 +39,10 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
         TextMaster.init(loader);
-
+        MasterRenderer renderer = new MasterRenderer(loader);
+        ParticleMaster.init(loader, renderer.getProjectionMatrix());
+        
+        
         FontType font = new FontType(loader.loadTexture("harrington"), new File("res/harrington.fnt"));
 
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("mud"));
@@ -89,7 +95,7 @@ public class MainGameLoop {
         //TexturedModel frozenEnemy = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("ice")));
         
         List<Enemy> enemies = new ArrayList<>();
-        int enemyCount = 2;
+        int enemyCount = 10;
         for (int i=0; i<enemyCount; i++)
         {   
             Random rand = new Random();
@@ -100,7 +106,7 @@ public class MainGameLoop {
             enemies.add(enemy);
         }
 
-        MasterRenderer renderer = new MasterRenderer(loader);
+        
         RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
         TexturedModel wormTexturedModel = new TexturedModel(soldierModel, new ModelTexture(
                 loader.loadTexture("Wormpng")));
@@ -130,7 +136,7 @@ public class MainGameLoop {
 
         KeyboardHandler keyboard = new KeyboardHandler();
 
-
+        ParticleSystem particleSystem = new ParticleSystem(20, 15, 0.1f, 1, 0.5f);
 
         while (!Display.isCloseRequested()) {
             GUIText hpText;
@@ -161,14 +167,23 @@ public class MainGameLoop {
             
             for(Enemy e : enemies) {
                 e.moveToPlayer(terrain, players.get(0));
+                Vector3f enemyPosition = new Vector3f(e.getPosition().x, e.getPosition().y, e.getPosition().z);
+                enemyPosition.y += 20;
+                particleSystem.generateParticles(enemyPosition);
             }
-       
+            
+            
             camera.move();
             picker.update();
-
+            ParticleMaster.update();
+            
             renderer.renderScene(players, terrains, lights, camera, trees, enemies);
+            
+            ParticleMaster.renderParticles(camera);
+            
             guiRenderer.render(guiTextures);
             TextMaster.render();
+            
 
             DisplayManager.updateDisplay();
             hpText.remove();
@@ -177,6 +192,7 @@ public class MainGameLoop {
         }
 
         //*********Clean Up Below**************
+        ParticleMaster.cleanUp();
         TextMaster.cleanUp();
         guiRenderer.cleanUp();
         renderer.cleanUp();
