@@ -1,6 +1,7 @@
 package entities;
 
 import fontMeshCreator.GUIText;
+import java.util.Iterator;
 import java.util.List;
 import models.TexturedModel;
 
@@ -11,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.DisplayManager;
 import terrains.Terrain;
+import textures.ModelTexture;
 
 public class Player {
 
@@ -22,7 +24,7 @@ public class Player {
     //private static final float TURN_SPEED = 160;
     private static final float GRAVITY = -50;
     private static final float JUMP_POWER = 18;
-
+    private static final int DAMAGE = 20;
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
     private float upwardsSpeed = 0;
@@ -209,18 +211,44 @@ public class Player {
     
     public void kill(List<Enemy> aliens) {
         if (Mouse.isButtonDown(0)) {
-            float killZ = position.z + (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
-            float killX = position.x + (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
-            System.out.println("killZ: " + killZ);
-            System.out.println("killX: " + killX);
-            for(Enemy a : aliens) {
-                if (Math.abs(a.getPosition().x - killX) < 100 && Math.abs(a.getPosition().z - killZ) < 100) {
-                    a.setScale(1f);
+            
+            float killZ = position.z;
+            float killX = position.x;
+            
+            
+            boolean isKilled = false;
+            for (int j=0; j<400; j++) {
+                if (isKilled) {
+                    break;
                 }
+                
+                
+                killZ += (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
+                killX += (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
+                
+                Iterator<Enemy> i = aliens.iterator();
+                
+                while(i.hasNext()) {
+                    //System.out.println("killX: " + killX);
+                    //System.out.println("killZ: " + killZ);
+                    Enemy a = i.next();
+                    if (Math.abs(a.getPosition().x - killX) < 2 && Math.abs(a.getPosition().z - killZ) < 2) {
+                        //a.setModel(frozenEnemy);
+                        if(a.getHP() >= 0) {
+                            a.setHP(DAMAGE);
+                        } else {
+                            i.remove();  
+                            isKilled = true;
+                            System.out.println("KILLED: " + a.getID());
+                            break;
+                        }
+                        
+                    }
+                }                
             }
         }
     }
-    
+
     public void takeWound() {
         System.out.println("HP: " + this.HP);
         if(this.HP >= 5) {

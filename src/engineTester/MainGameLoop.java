@@ -68,7 +68,7 @@ public class MainGameLoop {
         List<Tree> trees = new ArrayList<>();
         //Player[] players = new Player[2];            //(dlugosc, wysokosc, szerokosc)
         
-        int treesCount = 100;
+        int treesCount = 50;
         
         for (int i=0; i<treesCount; i++)
         {   
@@ -85,6 +85,8 @@ public class MainGameLoop {
         RawModel enemyModel = OBJLoader.loadObjModel("Alien", loader);        
         TexturedModel enemyTextureModel = new TexturedModel(enemyModel, new ModelTexture(
                 loader.loadTexture("grassy2")));
+        
+        //TexturedModel frozenEnemy = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("ice")));
         
         List<Enemy> enemies = new ArrayList<>();
         int enemyCount = 20;
@@ -149,13 +151,13 @@ public class MainGameLoop {
 
             for(Player player : players){
                 player.move(terrain);
-                player.kill(enemies);
+                players.get(0).kill(enemies);
             }
             
             for(Enemy e : enemies) {
                 e.moveToPlayer(terrain, players.get(0));
             }
-                
+       
             camera.move();
             picker.update();
 
@@ -165,6 +167,7 @@ public class MainGameLoop {
 
             DisplayManager.updateDisplay();
             hpText.remove();
+            enemiesLeft.remove();
 
         }
 

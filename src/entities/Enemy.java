@@ -66,7 +66,11 @@ public class Enemy {
         this.rotY += dy;
         this.rotZ += dz;
     }
-
+    
+    public  int getID() {
+        return ID;
+    }
+    
     public TexturedModel getModel() {
         return model;
     }
@@ -193,6 +197,10 @@ public class Enemy {
         return this.HP;
     }
 
+    public void setHP(int damage) {
+        this.HP -= damage ;
+    }
+    
     private void setSpeed() {
         float rotY = getRotY();
         
