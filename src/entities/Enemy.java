@@ -148,7 +148,7 @@ public class Enemy {
         //float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
         //if (dx != 0 || dz != 0)
         //System.out.println("dx " + dx + " dz " + dz);
-        System.out.println("ENEMY; x " + position.x + " y " + position.y + " z " + position.z);
+        //System.out.println("ENEMY; x " + position.x + " y " + position.y + " z " + position.z);
         
         float player_x = player.getPosition().x;
         float player_z = player.getPosition().z;

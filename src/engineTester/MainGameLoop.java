@@ -152,8 +152,8 @@ public class MainGameLoop {
             }
             
             if(players.get(0).getHP() > 0 && enemies.size() == 0) {
-                    GUIText youWinMessage = new GUIText("You win!", 3f, font, new Vector2f(0.45f, 0.5f), 1f, false);
-                    youWinMessage.setColour(1, 0, 0);
+                    GUIText youWinMessage = new GUIText("You win!", 3f, font, new Vector2f(0.44f, 0.4f), 1f, false);
+                    youWinMessage.setColour(0, 1, 0);
             }
             
             tmpPlayer = players.get(0);
@@ -169,7 +169,9 @@ public class MainGameLoop {
                 e.moveToPlayer(terrain, players.get(0));
                 Vector3f enemyPosition = new Vector3f(e.getPosition().x, e.getPosition().y, e.getPosition().z);
                 enemyPosition.y += 20;
-                particleSystem.generateParticles(enemyPosition);
+                if(e.getHP() < 100) {
+                    particleSystem.generateParticles(enemyPosition);
+                }
             }
             
             

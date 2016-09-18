@@ -149,10 +149,11 @@ public class Player {
         //if (dx != 0 || dz != 0)
         //System.out.println("dx " + dx + " dz " + dz);
         System.out.println("PLAYER; x " + position.x + " y " + position.y + " z " + position.z);
-        
-        
-        
+ 
         increasePosition(distance, 0, zDistance);
+        if (position.x <= 0 || position.x >= 500 || position.z <= -500 || position.z >= 0) {
+            increasePosition(-distance, 0, -zDistance);
+        }
         //float x = super.getPosition().x;
         //float y = super.getPosition().y;
         //float z = super.getPosition().z;
