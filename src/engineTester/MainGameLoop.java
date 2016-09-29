@@ -12,6 +12,7 @@ import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
 import guis.GuiRenderer;
 import guis.GuiTexture;
+import java.awt.Font;
 import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
@@ -44,9 +45,9 @@ public class MainGameLoop {
 
         //textures
         TerrainTexture backgroundTerrainTexture = new TerrainTexture(loader.loadTexture("mud"));
-        TerrainTexture redTexture = new TerrainTexture(loader.loadTexture("mud"));
-        TerrainTexture greenTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
-        TerrainTexture blueTexture = new TerrainTexture(loader.loadTexture("path"));
+        TerrainTexture redTexture = new TerrainTexture(loader.loadTexture("rock"));
+        TerrainTexture greenTexture = new TerrainTexture(loader.loadTexture("sand"));
+        TerrainTexture blueTexture = new TerrainTexture(loader.loadTexture("mars"));
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTerrainTexture, redTexture, greenTexture, blueTexture);
         TerrainTexture texturesComposition = new TerrainTexture(loader.loadTexture("blendMap"));
 
@@ -60,10 +61,10 @@ public class MainGameLoop {
         TexturedModel treeTextureModel = new TexturedModel(treeModel, new ModelTexture(loader.loadTexture("mud")));
         
         RawModel enemyModel = OBJLoader.loadObjModel("Alien", loader);        
-        TexturedModel enemyTexturedModel = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("grassy2")));
+        TexturedModel enemyTexturedModel = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("alien")));
                 
         RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
-        TexturedModel soldierTexturedModel = new TexturedModel(soldierModel, new ModelTexture(loader.loadTexture("Wormpng")));
+        TexturedModel soldierTexturedModel = new TexturedModel(soldierModel, new ModelTexture(loader.loadTexture("soldier")));
         
         Player player = new Player(0, soldierTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
         Camera camera = new Camera(player);  
