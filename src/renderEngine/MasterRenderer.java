@@ -72,18 +72,18 @@ public class MasterRenderer {
 
 	public void render(List<Light> lights, Camera camera) {
 		prepare();
-		shader.start();                
+		shader.startRendering();                
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
                 renderer.renderTrees(treesEntities);
                 renderer.renderEnemy(enemyEntities);
-		shader.stop();
-		terrainShader.start();
+		shader.stopRendering();
+		terrainShader.startRendering();
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
-		terrainShader.stop();
+		terrainShader.stopRendering();
 		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		terrains.clear();
 		entities.clear();

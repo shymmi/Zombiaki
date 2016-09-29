@@ -23,10 +23,10 @@ public class TerrainRenderer {
 
 	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-		shader.start();
+		shader.startRendering();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.connectTextureUnits();
-		shader.stop();
+		shader.stopRendering();
 	}
 
 	public void render(List<Terrain> terrains) {

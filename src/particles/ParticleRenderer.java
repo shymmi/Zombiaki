@@ -23,9 +23,9 @@ public class ParticleRenderer {
 	protected ParticleRenderer(Loader loader, Matrix4f projectionMatrix){
             quad = loader.loadToVAO(VERTICES, 2);
             shader = new ParticleShader();
-            shader.start();
+            shader.startRendering();
             shader.loadProjectionMatrix(projectionMatrix);
-            shader.stop();
+            shader.stopRendering();
 	}
 	
 	protected void render(List<Particle> particles, Camera camera){
@@ -62,7 +62,7 @@ public class ParticleRenderer {
 	}
 	
 	private void prepare(){
-            shader.start();
+            shader.startRendering();
             GL30.glBindVertexArray(quad.getVaoID());
             GL20.glEnableVertexAttribArray(0);
             GL11.glEnable(GL11.GL_BLEND);
@@ -75,7 +75,7 @@ public class ParticleRenderer {
             GL11.glDisable(GL11.GL_BLEND);
             GL20.glDisableVertexAttribArray(0);
             GL30.glBindVertexArray(0);
-            shader.stop();
+            shader.stopRendering();
 	}
 
 }

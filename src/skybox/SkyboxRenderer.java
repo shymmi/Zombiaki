@@ -68,14 +68,14 @@ public class SkyboxRenderer {
 		cube = loader.loadToVAO(VERTICES, 3);
                 texture = loader.loadCubeMap(TEXTURE_FILES);
 		shader = new SkyboxShader();
-		shader.start();
+		shader.startRendering();
 		//shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.stop();
+		shader.stopRendering();
 	}
 	
 	public void render(Camera camera, float r, float g, float b){
-		shader.start();
+		shader.startRendering();
 		shader.loadViewMatrix(camera);
 		shader.loadFogColour(r, g, b);
 		GL30.glBindVertexArray(cube.getVaoID());
@@ -86,7 +86,7 @@ public class SkyboxRenderer {
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
-		shader.stop();
+		shader.stopRendering();
 	}
 	
 //	private void bindTextures(){

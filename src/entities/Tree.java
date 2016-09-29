@@ -15,32 +15,16 @@ public class Tree {
     private Vector3f POSITION;
     private float ROT_X, ROT_Y, ROT_Z;
     private float SCALE;
-    
-    
     private int ID;
+    private int TEXTURE_INDEX = 0;
 
-    private int textureIndex = 0;
-
-  
-/*
-    public Player(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ,
-            float scale) {
-        this.textureIndex = index;
-        this.model = model;
-        this.position = position;
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
-        this.scale = scale;
-    }
-*/
     public float getTextureXOffset() {
-        int column = textureIndex % MODEL.getTexture().getNumberOfRows();
+        int column = TEXTURE_INDEX % MODEL.getTexture().getNumberOfRows();
         return (float) column / (float) MODEL.getTexture().getNumberOfRows();
     }
 
     public float getTextureYOffset() {
-        int row = textureIndex / MODEL.getTexture().getNumberOfRows();
+        int row = TEXTURE_INDEX / MODEL.getTexture().getNumberOfRows();
         return (float) row / (float) MODEL.getTexture().getNumberOfRows();
     }
 

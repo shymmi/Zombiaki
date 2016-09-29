@@ -12,42 +12,42 @@ import renderEngine.Loader;
 
 public class TextMaster {
 	
-	private static Loader loader;
-	private static Map<FontType, List<GUIText>> texts = new HashMap<>();
-	private static FontRenderer renderer;
+	private static Loader LOADER;
+	private static Map<FontType, List<GUIText>> TEXTS = new HashMap<>();
+	private static FontRenderer FONT_RENDERER;
 	
 	public static void init(Loader theLoader){
-		renderer = new FontRenderer();
-		loader = theLoader;
+		FONT_RENDERER = new FontRenderer();
+		LOADER = theLoader;
 	}
 	
 	public static void renderText(){
-		renderer.render(texts);
+		FONT_RENDERER.render(TEXTS);
 	}
 	
 	public static void loadText(GUIText text){
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+		int vao = LOADER.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());
-		List<GUIText> textBatch = texts.get(font);
+		List<GUIText> textBatch = TEXTS.get(font);
 		if(textBatch == null){
 			textBatch = new ArrayList<>();
-			texts.put(font, textBatch);
+			TEXTS.put(font, textBatch);
 		}
 		textBatch.add(text);
 	}
 	
 	public static void removeText(GUIText text){
-		List<GUIText> textBatch = texts.get(text.getFont());
+		List<GUIText> textBatch = TEXTS.get(text.getFont());
 		textBatch.remove(text);
 		if(textBatch.isEmpty()){
-			texts.remove(texts.get(text.getFont()));
+			TEXTS.remove(TEXTS.get(text.getFont()));
 		}
 	}
 	
 	public static void cleanUp(){
-		renderer.cleanUp();
+		FONT_RENDERER.cleanUp();
 	}
 
 }
