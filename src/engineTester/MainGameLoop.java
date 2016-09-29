@@ -128,7 +128,7 @@ public class MainGameLoop {
             player.kill(enemies);
             
             for(Enemy e : enemies) {
-                e.moveToPlayer(terrain, player);
+                e.moveToPlayerDirection(terrain, player);
                 Vector3f enemyPosition = new Vector3f(e.getPosition().x, e.getPosition().y, e.getPosition().z);
                 enemyPosition.y += 20;
                 if(e.getHP() < 100) {

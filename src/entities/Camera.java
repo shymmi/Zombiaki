@@ -12,7 +12,11 @@ public class Camera {
     private float HIGHT = 45;
     private float YAW = 0;
     private final Player PLAYER;
-
+    private static final int MAX_PITCH = 45;
+    private static final int MIN_PITCH = -15;
+    private static final int MAX_DISTANCE = 40;
+    private static final int MIN_DISTANCE = -10;
+    
     public Camera(Player player) {
         this.PLAYER = player;
     }
@@ -20,14 +24,11 @@ public class Camera {
     public void moveCamera() {
         calculateZoom();
         calculatePitch();
-        //calculateAngleAroundPlayer();
+        calculateAngle();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
-        //System.out.println("horizontal: "+horizontalDistance+"\tvertical: "+verticalDistance);
         calculateCameraPosition(horizontalDistance, verticalDistance);
-        this.YAW = 180 - (PLAYER.getRotY() + ANGLE);
-        YAW %= 360;
-
+        this.YAW = (180 - (PLAYER.getRotY() + ANGLE)) % 360;
     }
 
     public void invertPitch() {
@@ -66,36 +67,27 @@ public class Camera {
     private void calculateZoom() {
         float zoomLevel = Mouse.getDWheel() * 0.03f;
         DISTANCE -= zoomLevel;
-        if (DISTANCE < -10) {
-            DISTANCE = -10;
+        if (DISTANCE < MIN_DISTANCE) {
+            DISTANCE = MIN_DISTANCE;
         }
-        else if (DISTANCE > 40)  {
-            DISTANCE = 40;
+        else if (DISTANCE > MAX_DISTANCE)  {
+            DISTANCE = MAX_DISTANCE;
         }
     }
 
-    private void calculatePitch() { //góra dół
-        //if(Mouse.isButtonDown(1)){
+    private void calculatePitch() { //up and down
         float pitchChange = Mouse.getDY() * 0.2f;
         HIGHT -= pitchChange;
-        if (HIGHT < -15) {
-            HIGHT = -15;
-        } else if (HIGHT > 45) {
-            HIGHT = 45;
+        if (HIGHT < MIN_PITCH) {
+            HIGHT = MIN_PITCH;
+        } else if (HIGHT > MAX_PITCH) {
+            HIGHT = MAX_PITCH;
         }
-
-        //}
     }
 
-    private void calculateAngleAroundPlayer() { //lewo prawo
-        //if(Mouse.isButtonDown(0)){
+    private void calculateAngle() { //left and right
         float angleChange = Mouse.getDX() * 0.3f;
-			//angleAroundPlayer -= angleChange;
-        //player.setRotY(angleAroundPlayer);
         PLAYER.increaseRotation(0, -angleChange, 0);
-                        //System.out.println("angle: " + angleChange + "rotY: " + player.getRotY());
-
-        //}
     }
 
 }
