@@ -3,12 +3,9 @@ package engineTester;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
-
 import entities.*;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
@@ -18,7 +15,6 @@ import guis.GuiTexture;
 import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
-import particles.Particle;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import renderEngine.DisplayManager;
@@ -29,12 +25,13 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.KeyboardHandler;
 import toolbox.MousePicker;
 
 public class MainGameLoop {
-
+    
     public static void main(String[] args) {
+        int TREES_COUNT = 50;
+        int ENEMIES_COUNT = 10;
 
         DisplayManager.createDisplay();
         Loader loader = new Loader();
@@ -42,41 +39,50 @@ public class MainGameLoop {
         MasterRenderer renderer = new MasterRenderer(loader);
         ParticleMaster.init(loader, renderer.getProjectionMatrix());
         
-        
+        //font
         FontType font = new FontType(loader.loadTexture("harrington"), new File("res/harrington.fnt"));
 
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("mud"));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+        //textures
+        TerrainTexture backgroundTerrainTexture = new TerrainTexture(loader.loadTexture("mud"));
+        TerrainTexture redTexture = new TerrainTexture(loader.loadTexture("mud"));
+        TerrainTexture greenTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
+        TerrainTexture blueTexture = new TerrainTexture(loader.loadTexture("path"));
+        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTerrainTexture, redTexture, greenTexture, blueTexture);
+        TerrainTexture texturesComposition = new TerrainTexture(loader.loadTexture("blendMap"));
 
-        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-
-        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "wellington");
-        List<Terrain> terrains = new ArrayList<>();
-        terrains.add(terrain);
-
-        TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader),
-                new ModelTexture(loader.loadTexture("lamp")));
-        lamp.getTexture().setUseFakeLighting(true);
-                
-        List<Light> lights = new ArrayList<>();
-        Light sun = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
-        //Light sun = new Light(new Vector3f(10000, -10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
-        lights.add(sun);
+        //objects declarations
+        Terrain terrain = new Terrain(0, -1, loader, texturePack, texturesComposition, "wellington");
         
-        //trees
+        Light light1 = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
+        Light light2 = new Light(new Vector3f(10000, -10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
+        
         RawModel treeModel = OBJLoader.loadObjModel("DeadTree", loader);        
-        TexturedModel treeTextureModel = new TexturedModel(treeModel, new ModelTexture(
-                loader.loadTexture("mud")));
+        TexturedModel treeTextureModel = new TexturedModel(treeModel, new ModelTexture(loader.loadTexture("mud")));
         
+        RawModel enemyModel = OBJLoader.loadObjModel("Alien", loader);        
+        TexturedModel enemyTexturedModel = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("grassy2")));
+                
+        RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
+        TexturedModel soldierTexturedModel = new TexturedModel(soldierModel, new ModelTexture(loader.loadTexture("Wormpng")));
+        
+        Player player = new Player(0, soldierTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
+        Camera camera = new Camera(player);  
+        GuiTexture gunpoint = new GuiTexture(loader.loadTexture("crosshair"), new Vector2f(0.02f, 0.2f), new Vector2f(0.05f, 0.1f));
+        MousePicker mousePicker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+        ParticleSystem bleedingSystem = new ParticleSystem(20, 15, 0.1f, 1, 0.5f);
+        
+        GUIText HealthPoints_Text;
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
+ 
+        List<Light> lights = new ArrayList<>();
         List<Tree> trees = new ArrayList<>();
-        //Player[] players = new Player[2];            //(dlugosc, wysokosc, szerokosc)
+        List<Enemy> enemies = new ArrayList<>();
+        List<GuiTexture> guiTextures = new ArrayList<>();
+
+        lights.add(light1);
+        lights.add(light2);  
         
-        int treesCount = 50;
-        
-        for (int i=0; i<treesCount; i++)
+        for (int i=0; i<TREES_COUNT; i++)
         {   
             Random rand = new Random();
             float randx = rand.nextInt((int)terrain.SIZE) + 1;
@@ -88,55 +94,29 @@ public class MainGameLoop {
             trees.add(tree);
         }
         
-        RawModel enemyModel = OBJLoader.loadObjModel("Alien", loader);        
-        TexturedModel enemyTextureModel = new TexturedModel(enemyModel, new ModelTexture(
-                loader.loadTexture("grassy2")));
-        
-        //TexturedModel frozenEnemy = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("ice")));
-        
-        List<Enemy> enemies = new ArrayList<>();
-        int enemyCount = 10;
-        for (int i=0; i<enemyCount; i++)
+        for (int i=0; i<ENEMIES_COUNT; i++)
         {   
             Random rand = new Random();
             float randx = rand.nextInt((int)terrain.SIZE) + 1;
             float randz = (rand.nextInt((int)terrain.SIZE) * -1) - 1;
             float rot = rand.nextInt(180);
-            Enemy enemy = new Enemy(i, enemyTextureModel, new Vector3f(randx, terrain.getHeightOfTerrain(randx, randz), randz), rot, 5, 100);
+            Enemy enemy = new Enemy(i, enemyTexturedModel, new Vector3f(randx, terrain.getHeightOfTerrain(randx, randz), randz), rot, 5, 100);
             enemies.add(enemy);
         }
 
-        
-        RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
-        TexturedModel wormTexturedModel = new TexturedModel(soldierModel, new ModelTexture(
-                loader.loadTexture("Wormpng")));
-                
-        Player player = new Player(0, wormTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
+        guiTextures.add(gunpoint);
 
-        Camera camera = new Camera(player);     
-        
-        List<GuiTexture> guiTextures = new ArrayList<>();
-        GuiTexture crosshair = new GuiTexture(loader.loadTexture("crosshair"), new Vector2f(0.02f, 0.2f), new Vector2f(0.05f, 0.1f));
-        guiTextures.add(crosshair);
-        GuiRenderer guiRenderer = new GuiRenderer(loader);
-
-        MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
-
-        //KeyboardHandler keyboard = new KeyboardHandler();
-
-        ParticleSystem particleSystem = new ParticleSystem(20, 15, 0.1f, 1, 0.5f);
-
+        //game loop
         while (!Display.isCloseRequested()) {
-            GUIText hpText;
             GUIText enemiesLeft = new GUIText("Enemies left: " + enemies.size(), 3f, font, new Vector2f(0f, 0f), 1f, false);
             enemiesLeft.setColour(1, 0, 0);
             
             if(player.getHP() > 0) {
-                hpText = new GUIText(player.getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
-                hpText.setColour(1, 1, 0);
+                HealthPoints_Text = new GUIText(player.getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
+                HealthPoints_Text.setColour(1, 1, 0);
             } else {
-                hpText = new GUIText("You were weak! Try again.", 3f, font, new Vector2f(0.3f, 0.5f), 1f, false);
-                hpText.setColour(1, 1, 0);
+                HealthPoints_Text = new GUIText("You were weak! Try again.", 3f, font, new Vector2f(0.3f, 0.5f), 1f, false);
+                HealthPoints_Text.setColour(1, 1, 0);
             }
             
             if(player.getHP() > 0 && enemies.size() == 0) {
@@ -152,30 +132,28 @@ public class MainGameLoop {
                 Vector3f enemyPosition = new Vector3f(e.getPosition().x, e.getPosition().y, e.getPosition().z);
                 enemyPosition.y += 20;
                 if(e.getHP() < 100) {
-                    particleSystem.generateParticles(enemyPosition);
+                    bleedingSystem.generateParticles(enemyPosition);
                 }
             }
             
+            camera.moveCamera();
             
-            camera.move();
-            picker.update();
-            ParticleMaster.update();
+            mousePicker.updatePicker();
+            ParticleMaster.updateParticles();
             
-            renderer.renderScene(player, terrains, lights, camera, trees, enemies);
-            
+            //render
+            renderer.renderScene(player, terrain, lights, camera, trees, enemies);
             ParticleMaster.renderParticles(camera);
-            
-            guiRenderer.render(guiTextures);
-            TextMaster.render();
-            
+            guiRenderer.renderGUI(guiTextures);
+            TextMaster.renderText();
 
+            //update
             DisplayManager.updateDisplay();
-            hpText.remove();
-            enemiesLeft.remove();
-
+            HealthPoints_Text.updateGUI();
+            enemiesLeft.updateGUI();
         }
 
-        //*********Clean Up Below**************
+        //Clean up
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
         guiRenderer.cleanUp();

@@ -2,7 +2,6 @@ package entities;
 
 import java.util.Random;
 import models.TexturedModel;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
@@ -12,59 +11,41 @@ import terrains.Terrain;
 
 public class Enemy {
 
-    private TexturedModel model;
-    private Vector3f position;
-    private float rotX, rotY, rotZ;
-    private float scale;
+    private TexturedModel MODEL;
+    private Vector3f POSITION;
+    private float ROT_X, ROT_Y, ROT_Z;
+    private float SCALE;
     private static final float RUN_SPEED = 20;
-    //private static final float TURN_SPEED = 160;
-    private static final float GRAVITY = -50;
-
-    private float currentSpeed = 0;
-    private float currentTurnSpeed = 0;
-    private float upwardsSpeed = 0;
-
-    private int ID;
+    private static final float GRAVITY_EFFECT = -50;
+    private float CURRENT_SPEED = 0;
+    private float TURNING_SPEED = 0;
+    private float MOVING_SPEED = 0;
+    private final int ID;
     private int HP;
-    private boolean attacked;
-
-    private boolean isInAir = false;
 
     private int textureIndex = 0;
 
   
-/*
-    public Player(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ,
-            float scale) {
-        this.textureIndex = index;
-        this.model = model;
-        this.position = position;
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
-        this.scale = scale;
-    }
-*/
     public float getTextureXOffset() {
-        int column = textureIndex % model.getTexture().getNumberOfRows();
-        return (float) column / (float) model.getTexture().getNumberOfRows();
+        int column = textureIndex % MODEL.getTexture().getNumberOfRows();
+        return (float) column / (float) MODEL.getTexture().getNumberOfRows();
     }
 
     public float getTextureYOffset() {
-        int row = textureIndex / model.getTexture().getNumberOfRows();
-        return (float) row / (float) model.getTexture().getNumberOfRows();
+        int row = textureIndex / MODEL.getTexture().getNumberOfRows();
+        return (float) row / (float) MODEL.getTexture().getNumberOfRows();
     }
 
     public void increasePosition(float dx, float dy, float dz) {
-        this.position.x += dx;
-        this.position.y += dy;
-        this.position.z += dz;
+        this.POSITION.x += dx;
+        this.POSITION.y += dy;
+        this.POSITION.z += dz;
     }
 
     public void increaseRotation(float dx, float dy, float dz) {
-        this.rotX += dx;
-        this.rotY += dy;
-        this.rotZ += dz;
+        this.ROT_X += dx;
+        this.ROT_Y += dy;
+        this.ROT_Z += dz;
     }
     
     public  int getID() {
@@ -72,75 +53,74 @@ public class Enemy {
     }
     
     public TexturedModel getModel() {
-        return model;
+        return MODEL;
     }
 
     public void setModel(TexturedModel model) {
-        this.model = model;
+        this.MODEL = model;
     }
 
     public Vector3f getPosition() {
-        return position;
+        return POSITION;
     }
 
     public void setPosition(Vector3f position) {
-        this.position = position;
+        this.POSITION = position;
     }
 
     public float getRotX() {
-        return rotX;
+        return ROT_X;
     }
 
     public void setRotX(float rotX) {
-        this.rotX = rotX;
+        this.ROT_X = rotX;
     }
 
     public float getRotY() {
-        return rotY;
+        return ROT_Y;
     }
 
     public void setRotY(float rotY) {
-        this.rotY = rotY;
+        this.ROT_Y = rotY;
     }
 
     public float getRotZ() {
-        return rotZ;
+        return ROT_Z;
     }
 
     public void setRotZ(float rotZ) {
-        this.rotZ = rotZ;
+        this.ROT_Z = rotZ;
     }
 
     public float getScale() {
-        return scale;
+        return SCALE;
     }
 
     public void setScale(float scale) {
-        this.scale = scale;
+        this.SCALE = scale;
     }
 
     public Enemy(int id, TexturedModel model, Vector3f position, float rotY, float scale, int hp) {
-        this.model = model;
-        this.position = position;
-        this.rotX = 1;
-        this.rotY = rotY;
-        this.rotZ = 1;
-        this.scale = scale;        
+        this.MODEL = model;
+        this.POSITION = position;
+        this.ROT_X = 1;
+        this.ROT_Y = rotY;
+        this.ROT_Z = 1;
+        this.SCALE = scale;        
         this.ID = id;
         this.HP = hp;
-        this.attacked = false;
     }
 
     public void moveToPlayer(Terrain terrain, Player player) {
                
-        this.currentSpeed = 5;
-        this.currentTurnSpeed = 1;
+        this.CURRENT_SPEED = 5;
+        this.TURNING_SPEED = 1;
         
         // setSpeed();
 
         //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+        float distance = CURRENT_SPEED * DisplayManager.getFrameTimeSeconds();
         //float zDistance = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
         
         //float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
@@ -153,8 +133,8 @@ public class Enemy {
         float player_x = player.getPosition().x;
         float player_z = player.getPosition().z;
         
-        float alien_x = position.x;
-        float alien_z = position.z;
+        float alien_x = POSITION.x;
+        float alien_z = POSITION.z;
         
         if (Math.abs(alien_x - player_x) < 1 && Math.abs(alien_z - player_z) < 1) {
             player.takeWound();
@@ -183,12 +163,11 @@ public class Enemy {
         //System.out.println(getPosition());
 
         //super.increasePosition(dx, 0, dz);
-        upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
-        increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        MOVING_SPEED += GRAVITY_EFFECT * DisplayManager.getFrameTimeSeconds();
+        increasePosition(0, MOVING_SPEED * DisplayManager.getFrameTimeSeconds(), 0);
         float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
         if (getPosition().y < terrainHeight) {
-            upwardsSpeed = 0;
-            isInAir = false;
+            MOVING_SPEED = 0;
             getPosition().y = terrainHeight;
         }
     }
@@ -208,19 +187,19 @@ public class Enemy {
             rotY -= 360;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            currentSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentTurnSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            CURRENT_SPEED = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            TURNING_SPEED = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
         } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            currentSpeed = -(float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentTurnSpeed = -(float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            CURRENT_SPEED = -(float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            TURNING_SPEED = -(float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
         } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            currentTurnSpeed = (float) -(RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            TURNING_SPEED = (float) -(RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            CURRENT_SPEED = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
         } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            currentTurnSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentSpeed = (float) -(RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            TURNING_SPEED = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
+            CURRENT_SPEED = (float) -(RUN_SPEED * Math.cos(Math.toRadians(rotY)));
         } else {
-            this.currentTurnSpeed = 0;
+            this.TURNING_SPEED = 0;
         }
 //
 //        //System.out.println("x " + currentSpeed + " z " +  currentTurnSpeed + " rotY " + rotY);

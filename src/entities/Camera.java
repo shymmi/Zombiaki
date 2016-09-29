@@ -5,89 +5,83 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 
-    private float distanceFromPlayer = -10;
-    private float angleAroundPlayer = 0;
+    private float DISTANCE = -10;
+    private final float ANGLE = 0;
 
-    private Vector3f position = new Vector3f(0, 0, 0);
-    private float pitch = 20;
-    private float yaw = 0;
-    private float roll;
-    private Player player;
+    private final Vector3f POSITION = new Vector3f(0, 0, 0);
+    private float HIGHT = 45;
+    private float YAW = 0;
+    private final Player PLAYER;
 
     public Camera(Player player) {
-        this.player = player;
+        this.PLAYER = player;
     }
 
-    public void move() {
+    public void moveCamera() {
         calculateZoom();
         calculatePitch();
-        calculateAngleAroundPlayer();
+        //calculateAngleAroundPlayer();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         //System.out.println("horizontal: "+horizontalDistance+"\tvertical: "+verticalDistance);
         calculateCameraPosition(horizontalDistance, verticalDistance);
-        this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
-        yaw %= 360;
+        this.YAW = 180 - (PLAYER.getRotY() + ANGLE);
+        YAW %= 360;
 
     }
 
     public void invertPitch() {
-        this.pitch = -pitch;
+        this.HIGHT = -HIGHT;
     }
 
     public Vector3f getPosition() {
-        return position;
+        return POSITION;
     }
 
     public float getPitch() {
-        return pitch;
+        return HIGHT;
     }
 
     public float getYaw() {
-        return yaw;
-    }
-
-    public float getRoll() {
-        return roll;
+        return YAW;
     }
 
     private void calculateCameraPosition(float horizDistance, float verticDistance) {
-        float theta = player.getRotY() + angleAroundPlayer;
+        float theta = PLAYER.getRotY() + ANGLE;
         float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
-        position.x = player.getPosition().x - offsetX;
-        position.z = player.getPosition().z - offsetZ;
-        position.y = player.getPosition().y + verticDistance + 12;
-        //System.out.println("x: " + position.x + " y: " + position.y + " z: " + position.z);
+        POSITION.x = PLAYER.getPosition().x - offsetX;
+        POSITION.z = PLAYER.getPosition().z - offsetZ;
+        POSITION.y = PLAYER.getPosition().y + verticDistance + 12;
     }
 
     private float calculateHorizontalDistance() {
-        return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch + 4)));
+        return (float) (DISTANCE * Math.cos(Math.toRadians(HIGHT + 4)));
     }
 
     private float calculateVerticalDistance() {
-        return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch + 4)));
+        return (float) (DISTANCE * Math.sin(Math.toRadians(HIGHT + 4)));
     }
 
     private void calculateZoom() {
         float zoomLevel = Mouse.getDWheel() * 0.03f;
-        distanceFromPlayer -= zoomLevel;
-        if (distanceFromPlayer < -10) {
-            distanceFromPlayer = -10;
+        DISTANCE -= zoomLevel;
+        if (DISTANCE < -10) {
+            DISTANCE = -10;
         }
-        else if (distanceFromPlayer > 40)  {
-            distanceFromPlayer = 40;
+        else if (DISTANCE > 40)  {
+            DISTANCE = 40;
         }
     }
 
     private void calculatePitch() { //góra dół
         //if(Mouse.isButtonDown(1)){
         float pitchChange = Mouse.getDY() * 0.2f;
-        pitch -= pitchChange;
-        if (pitch < -15) {
-            pitch = -15;
-        } else if (pitch > 45) {
-            pitch = 45;
+        HIGHT -= pitchChange;
+        if (HIGHT < -15) {
+            HIGHT = -15;
+        } else if (HIGHT > 45) {
+            HIGHT = 45;
         }
 
         //}
@@ -98,7 +92,7 @@ public class Camera {
         float angleChange = Mouse.getDX() * 0.3f;
 			//angleAroundPlayer -= angleChange;
         //player.setRotY(angleAroundPlayer);
-        player.increaseRotation(0, -angleChange, 0);
+        PLAYER.increaseRotation(0, -angleChange, 0);
                         //System.out.println("angle: " + angleChange + "rotY: " + player.getRotY());
 
         //}

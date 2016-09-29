@@ -67,7 +67,7 @@ public class GUIText {
 	/**
 	 * Remove the text from the screen.
 	 */
-	public void remove() {
+	public void updateGUI() {
 		TextMaster.removeText(this);
 	}
 

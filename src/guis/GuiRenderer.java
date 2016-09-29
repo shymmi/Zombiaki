@@ -24,7 +24,7 @@ public class GuiRenderer {
 		shader = new GuiShader();
 	}
 	
-	public void render(List<GuiTexture> guis){
+	public void renderGUI(List<GuiTexture> guis){
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);

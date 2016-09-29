@@ -54,12 +54,10 @@ public class MasterRenderer {
 		return this.projectionMatrix;
 	}
 
-	public void renderScene(Player player, List<Terrain> terrains, List<Light> lights,
+	public void renderScene(Player player, Terrain terrain, List<Light> lights,
 			Camera camera, List<Tree> trees, List<Enemy> enemies) {
-		for (Terrain terrain : terrains) {
-			processTerrain(terrain);
-		}
                 
+                processTerrain(terrain);
                 processEntity(player);
                 
                 for (Tree t : trees) {

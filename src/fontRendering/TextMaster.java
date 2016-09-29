@@ -21,7 +21,7 @@ public class TextMaster {
 		loader = theLoader;
 	}
 	
-	public static void render(){
+	public static void renderText(){
 		renderer.render(texts);
 	}
 	

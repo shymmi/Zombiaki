@@ -43,7 +43,7 @@ public class MousePicker {
 		return currentRay;
 	}
 
-	public void update() {
+	public void updatePicker() {
 		viewMatrix = Maths.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
 		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
