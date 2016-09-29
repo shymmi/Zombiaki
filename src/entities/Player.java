@@ -38,18 +38,6 @@ public class Player {
     private int textureIndex = 0;
 
   
-/*
-    public Player(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ,
-            float scale) {
-        this.textureIndex = index;
-        this.model = model;
-        this.position = position;
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
-        this.scale = scale;
-    }
-*/
     public float getTextureXOffset() {
         int column = textureIndex % model.getTexture().getNumberOfRows();
         return (float) column / (float) model.getTexture().getNumberOfRows();

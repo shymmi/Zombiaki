@@ -110,31 +110,19 @@ public class MainGameLoop {
         RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
         TexturedModel wormTexturedModel = new TexturedModel(soldierModel, new ModelTexture(
                 loader.loadTexture("Wormpng")));
-        
-        List<Player> players = new ArrayList<>();
-        //Player[] players = new Player[2];            //(dlugosc, wysokosc, szerokosc)
-        
-        Player tmpPlayer = new Player(0, wormTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
-        players.add(tmpPlayer);
+                
+        Player player = new Player(0, wormTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
 
-        //entities.add(players[0]);
-        //entities.add(players[1]);
-
-        Camera[] cameras = new Camera[1];
-        cameras[0] = new Camera(players.get(0));     
+        Camera camera = new Camera(player);     
         
         List<GuiTexture> guiTextures = new ArrayList<>();
         GuiTexture crosshair = new GuiTexture(loader.loadTexture("crosshair"), new Vector2f(0.02f, 0.2f), new Vector2f(0.05f, 0.1f));
         guiTextures.add(crosshair);
         GuiRenderer guiRenderer = new GuiRenderer(loader);
 
-        MousePicker[] pickers = new MousePicker[1];
-        pickers[0] = new MousePicker(cameras[0], renderer.getProjectionMatrix(), terrain);
+        MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 
-        Camera camera = cameras[0];
-        MousePicker picker = pickers[0];
-
-        KeyboardHandler keyboard = new KeyboardHandler();
+        //KeyboardHandler keyboard = new KeyboardHandler();
 
         ParticleSystem particleSystem = new ParticleSystem(20, 15, 0.1f, 1, 0.5f);
 
@@ -143,30 +131,24 @@ public class MainGameLoop {
             GUIText enemiesLeft = new GUIText("Enemies left: " + enemies.size(), 3f, font, new Vector2f(0f, 0f), 1f, false);
             enemiesLeft.setColour(1, 0, 0);
             
-            if(players.get(0).getHP() > 0) {
-                hpText = new GUIText(players.get(0).getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
+            if(player.getHP() > 0) {
+                hpText = new GUIText(player.getHP() + " HP", 3f, font, new Vector2f(0f, 0.9f), 1f, false);
                 hpText.setColour(1, 1, 0);
             } else {
                 hpText = new GUIText("You were weak! Try again.", 3f, font, new Vector2f(0.3f, 0.5f), 1f, false);
                 hpText.setColour(1, 1, 0);
             }
             
-            if(players.get(0).getHP() > 0 && enemies.size() == 0) {
-                    GUIText youWinMessage = new GUIText("You win!", 3f, font, new Vector2f(0.44f, 0.4f), 1f, false);
-                    youWinMessage.setColour(0, 1, 0);
+            if(player.getHP() > 0 && enemies.size() == 0) {
+                GUIText youWinMessage = new GUIText("You win!", 3f, font, new Vector2f(0.44f, 0.4f), 1f, false);
+                youWinMessage.setColour(0, 1, 0);
             }
             
-            tmpPlayer = players.get(0);
-            camera = cameras[0];
-            picker = pickers[0];
-
-            for(Player player : players){
-                player.move(terrain);
-                players.get(0).kill(enemies);
-            }
+            player.move(terrain);
+            player.kill(enemies);
             
             for(Enemy e : enemies) {
-                e.moveToPlayer(terrain, players.get(0));
+                e.moveToPlayer(terrain, player);
                 Vector3f enemyPosition = new Vector3f(e.getPosition().x, e.getPosition().y, e.getPosition().z);
                 enemyPosition.y += 20;
                 if(e.getHP() < 100) {
@@ -179,7 +161,7 @@ public class MainGameLoop {
             picker.update();
             ParticleMaster.update();
             
-            renderer.renderScene(players, terrains, lights, camera, trees, enemies);
+            renderer.renderScene(player, terrains, lights, camera, trees, enemies);
             
             ParticleMaster.renderParticles(camera);
             
