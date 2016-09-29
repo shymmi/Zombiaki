@@ -125,7 +125,7 @@ public class MainGameLoop {
             }
             
             player.move(terrain);
-            player.kill(enemies);
+            player.shoot(enemies);
             
             for(Enemy e : enemies) {
                 e.moveToPlayerDirection(terrain, player);

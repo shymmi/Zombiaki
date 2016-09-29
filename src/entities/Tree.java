@@ -11,10 +11,10 @@ import terrains.Terrain;
 
 public class Tree {
 
-    private TexturedModel model;
-    private Vector3f position;
-    private float rotX, rotY, rotZ;
-    private float scale;
+    private TexturedModel MODEL;
+    private Vector3f POSITION;
+    private float ROT_X, ROT_Y, ROT_Z;
+    private float SCALE;
     
     
     private int ID;
@@ -35,70 +35,70 @@ public class Tree {
     }
 */
     public float getTextureXOffset() {
-        int column = textureIndex % model.getTexture().getNumberOfRows();
-        return (float) column / (float) model.getTexture().getNumberOfRows();
+        int column = textureIndex % MODEL.getTexture().getNumberOfRows();
+        return (float) column / (float) MODEL.getTexture().getNumberOfRows();
     }
 
     public float getTextureYOffset() {
-        int row = textureIndex / model.getTexture().getNumberOfRows();
-        return (float) row / (float) model.getTexture().getNumberOfRows();
+        int row = textureIndex / MODEL.getTexture().getNumberOfRows();
+        return (float) row / (float) MODEL.getTexture().getNumberOfRows();
     }
 
     public TexturedModel getModel() {
-        return model;
+        return MODEL;
     }
 
     public void setModel(TexturedModel model) {
-        this.model = model;
+        this.MODEL = model;
     }
 
     public Vector3f getPosition() {
-        return position;
+        return POSITION;
     }
 
     public void setPosition(Vector3f position) {
-        this.position = position;
+        this.POSITION = position;
     }
 
     public float getRotX() {
-        return rotX;
+        return ROT_X;
     }
 
     public void setRotX(float rotX) {
-        this.rotX = rotX;
+        this.ROT_X = rotX;
     }
 
     public float getRotY() {
-        return rotY;
+        return ROT_Y;
     }
 
     public void setRotY(float rotY) {
-        this.rotY = rotY;
+        this.ROT_Y = rotY;
     }
 
     public float getRotZ() {
-        return rotZ;
+        return ROT_Z;
     }
 
     public void setRotZ(float rotZ) {
-        this.rotZ = rotZ;
+        this.ROT_Z = rotZ;
     }
 
     public float getScale() {
-        return scale;
+        return SCALE;
     }
 
     public void setScale(float scale) {
-        this.scale = scale;
+        this.SCALE = scale;
     }
 
     public Tree(int id, TexturedModel model, Vector3f position, float rotY, float scale) {
-        this.model = model;
-        this.position = position;
-        this.rotX = 1;
-        this.rotY = rotY;
-        this.rotZ = 1;
-        this.scale = scale;        
+        this.MODEL = model;
+        this.POSITION = position;
+        this.ROT_X = 1;
+        this.ROT_Y = rotY;
+        this.ROT_Z = 1;
+        this.SCALE = scale;        
         this.ID = id;
     }
     

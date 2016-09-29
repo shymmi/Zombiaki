@@ -16,144 +16,126 @@ import textures.ModelTexture;
 
 public class Player {
 
-    private TexturedModel model;
-    public Vector3f position;
-    private float rotX, rotY, rotZ;
-    private float scale;
+    private TexturedModel TEXTURED_MODEL;
+    public Vector3f POSITION;
+    private float ROT_X, ROT_Y, ROT_Z;
+    private float SCALE;
     private static final float RUN_SPEED = 40;
-    //private static final float TURN_SPEED = 160;
     public static final float GRAVITY = -50;
-    private static final float JUMP_POWER = 18;
+    private static final float JUMP_HEIGHT = 18;
     private static final int DAMAGE = 2;
-    private float currentSpeed = 0;
-    private float currentTurnSpeed = 0;
-    private float upwardsSpeed = 0;
-
-    private int ID;
+    private float CURRENT_SPEED = 0;
+    private float TURNING_SPEED = 0;
+    private float MOVING_SPEED = 0;
+    private final int ID;
     private int HP;
-    private boolean attacked;
-
-    private boolean isInAir = false;
-
-    private int textureIndex = 0;
-
+    private boolean IS_IN_AIR = false;
+    private int TEXTURE_INDEX = 0;
+    private int ENEMY_DAMAGE = 5;
   
     public float getTextureXOffset() {
-        int column = textureIndex % model.getTexture().getNumberOfRows();
-        return (float) column / (float) model.getTexture().getNumberOfRows();
+        int column = TEXTURE_INDEX % TEXTURED_MODEL.getTexture().getNumberOfRows();
+        return (float) column / (float) TEXTURED_MODEL.getTexture().getNumberOfRows();
     }
 
     public float getTextureYOffset() {
-        int row = textureIndex / model.getTexture().getNumberOfRows();
-        return (float) row / (float) model.getTexture().getNumberOfRows();
+        int row = TEXTURE_INDEX / TEXTURED_MODEL.getTexture().getNumberOfRows();
+        return (float) row / (float) TEXTURED_MODEL.getTexture().getNumberOfRows();
     }
 
     public void increasePosition(float dx, float dy, float dz) {
-        this.position.x += dx;
-        this.position.y += dy;
-        this.position.z += dz;
+        this.POSITION.x += dx;
+        this.POSITION.y += dy;
+        this.POSITION.z += dz;
     }
 
     public void increaseRotation(float dx, float dy, float dz) {
 
-        this.rotX += dx;
-        this.rotY += dy;
-        this.rotZ += dz;
+        this.ROT_X += dx;
+        this.ROT_Y += dy;
+        this.ROT_Z += dz;
     }
 
     public TexturedModel getModel() {
-        return model;
+        return TEXTURED_MODEL;
     }
 
     public void setModel(TexturedModel model) {
-        this.model = model;
+        this.TEXTURED_MODEL = model;
     }
 
     public Vector3f getPosition() {
-        return position;
+        return POSITION;
     }
 
     public void setPosition(Vector3f position) {
-        this.position = position;
+        this.POSITION = position;
     }
 
     public float getRotX() {
-        return rotX;
+        return ROT_X;
     }
 
     public void setRotX(float rotX) {
-        this.rotX = rotX;
+        this.ROT_X = rotX;
     }
 
     public float getRotY() {
-        return rotY;
+        return ROT_Y;
     }
 
     public void setRotY(float rotY) {
-        this.rotY = rotY;
+        this.ROT_Y = rotY;
     }
 
     public float getRotZ() {
-        return rotZ;
+        return ROT_Z;
     }
 
     public void setRotZ(float rotZ) {
-        this.rotZ = rotZ;
+        this.ROT_Z = rotZ;
     }
 
     public float getScale() {
-        return scale;
+        return SCALE;
     }
 
     public void setScale(float scale) {
-        this.scale = scale;
+        this.SCALE = scale;
     }
 
     public Player(int id, TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
             float scale, int hp) {
-        this.model = model;
-        this.position = position;
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
-        this.scale = scale;        
+        this.TEXTURED_MODEL = model;
+        this.POSITION = position;
+        this.ROT_X = rotX;
+        this.ROT_Y = rotY;
+        this.ROT_Z = rotZ;
+        this.SCALE = scale;        
         this.ID = id;
         this.HP = hp;
-        this.attacked = false;
     }
 
     public void move(Terrain terrain) {
-        this.currentSpeed = 0;
-        this.currentTurnSpeed = 0;
-        setSpeed();
-        
-        //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        //super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-        float zDistance = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
-        //float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
-        //float dz = (float) (zDistance * Math.sin(Math.toRadians(super.getRotY())));
-        //float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
-        //if (dx != 0 || dz != 0)
-        //System.out.println("dx " + dx + " dz " + dz);
-        System.out.println("PLAYER; x " + position.x + " y " + position.y + " z " + position.z);
+        this.CURRENT_SPEED = 0;
+        this.TURNING_SPEED = 0;
+        moveForward();
+
+        float distance = CURRENT_SPEED * DisplayManager.getFrameTimeSeconds();
+        float zDistance = TURNING_SPEED * DisplayManager.getFrameTimeSeconds();
  
         increasePosition(distance, 0, zDistance);
-        if (position.x <= 0 || position.x >= 500 || position.z <= -500 || position.z >= 0) {
+        
+        if (POSITION.x <= 0 || POSITION.x >= 500 || POSITION.z <= -500 || POSITION.z >= 0) {
             increasePosition(-distance, 0, -zDistance);
         }
-        //float x = super.getPosition().x;
-        //float y = super.getPosition().y;
-        //float z = super.getPosition().z;
-//        System.out.println(getPosition());
 
-        //super.increasePosition(dx, 0, dz);
-        upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
-        increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        MOVING_SPEED += GRAVITY * DisplayManager.getFrameTimeSeconds();
+        increasePosition(0, MOVING_SPEED * DisplayManager.getFrameTimeSeconds(), 0);
         float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
         if (getPosition().y < terrainHeight) {
-            upwardsSpeed = 0;
-            isInAir = false;
+            MOVING_SPEED = 0;
+            IS_IN_AIR = false;
             getPosition().y = terrainHeight;
         }
     }
@@ -163,75 +145,65 @@ public class Player {
     }
 
     private void jump() {
-        if (!isInAir) {
-            this.upwardsSpeed = JUMP_POWER;
-            isInAir = true;
+        if (!IS_IN_AIR) {
+            this.MOVING_SPEED = JUMP_HEIGHT;
+            IS_IN_AIR = true;
         }
     }
 
-    private void setSpeed() {
-        float rotY = getRotY();
-        while (rotY > 360) {
-            rotY -= 360;
+    private void moveForward() {
+        float PLAYER_ROT_Y = getRotY();
+        while (PLAYER_ROT_Y > 360) {
+            PLAYER_ROT_Y -= 360;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            currentSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentTurnSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            CURRENT_SPEED = (float) (RUN_SPEED * Math.sin(Math.toRadians(PLAYER_ROT_Y)));
+            TURNING_SPEED = (float) (RUN_SPEED * Math.cos(Math.toRadians(PLAYER_ROT_Y)));
         } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            currentSpeed = -(float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentTurnSpeed = -(float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            CURRENT_SPEED = -(float) (RUN_SPEED * Math.sin(Math.toRadians(PLAYER_ROT_Y)));
+            TURNING_SPEED = -(float) (RUN_SPEED * Math.cos(Math.toRadians(PLAYER_ROT_Y)));
         } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            currentTurnSpeed = (float) -(RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentSpeed = (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            TURNING_SPEED = (float) -(RUN_SPEED * Math.sin(Math.toRadians(PLAYER_ROT_Y)));
+            CURRENT_SPEED = (float) (RUN_SPEED * Math.cos(Math.toRadians(PLAYER_ROT_Y)));
         } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            currentTurnSpeed = (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY)));
-            currentSpeed = (float) -(RUN_SPEED * Math.cos(Math.toRadians(rotY)));
+            TURNING_SPEED = (float) (RUN_SPEED * Math.sin(Math.toRadians(PLAYER_ROT_Y)));
+            CURRENT_SPEED = (float) -(RUN_SPEED * Math.cos(Math.toRadians(PLAYER_ROT_Y)));
         } else {
-            this.currentTurnSpeed = 0;
+            this.TURNING_SPEED = 0;
         }
 
-        //System.out.println("x " + currentSpeed + " z " +  currentTurnSpeed + " rotY " + rotY);
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             jump();
-
         }
 
     }
     
-    public void kill(List<Enemy> aliens) {
-        if (Mouse.isButtonDown(0)) {
+    public void shoot(List<Enemy> aliens) {
+        if (Mouse.isButtonDown(0)) {    
+            float DESTINATION_Z_POSITION = POSITION.z;
+            float DESTINATION_X_POSITION = POSITION.x;        
+            boolean isEnemyHitted = false;
             
-            float killZ = position.z;
-            float killX = position.x;
-            
-            
-            boolean isKilled = false;
             for (int j=0; j<400; j++) {
-                if (isKilled) {
+                if (isEnemyHitted) {
                     break;
                 }
-                
-                
-                killZ += (float) (RUN_SPEED * Math.cos(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
-                killX += (float) (RUN_SPEED * Math.sin(Math.toRadians(rotY))) * DisplayManager.getFrameTimeSeconds();
+                 
+                DESTINATION_Z_POSITION += (float) (RUN_SPEED * Math.cos(Math.toRadians(ROT_Y))) * DisplayManager.getFrameTimeSeconds();
+                DESTINATION_X_POSITION += (float) (RUN_SPEED * Math.sin(Math.toRadians(ROT_Y))) * DisplayManager.getFrameTimeSeconds();
                 
                 Iterator<Enemy> i = aliens.iterator();
                 
                 while(i.hasNext()) {
-                    //System.out.println("killX: " + killX);
-                    //System.out.println("killZ: " + killZ);
                     Enemy a = i.next();
-                    if (Math.abs(a.getPosition().x - killX) < 2 && Math.abs(a.getPosition().z - killZ) < 2) {
-                        //a.setModel(frozenEnemy);
+                    if (Math.abs(a.getPosition().x - DESTINATION_X_POSITION) < 2 && Math.abs(a.getPosition().z - DESTINATION_Z_POSITION) < 2) {
                         if(a.getHP() >= 0) {
-                            a.setHP(DAMAGE);
+                            a.decreaseHP(DAMAGE);
                         } else {
                             i.remove();  
-                            isKilled = true;
-                            System.out.println("KILLED: " + a.getID());
+                            isEnemyHitted = true;
                             break;
                         }
-                        
                     }
                 }                
             }
@@ -239,9 +211,8 @@ public class Player {
     }
 
     public void takeWound() {
-        System.out.println("HP: " + this.HP);
-        if(this.HP >= 5) {
-            this.HP -= 5;
+        if(this.HP >= ENEMY_DAMAGE) {
+            this.HP -= ENEMY_DAMAGE;
         } 
     }
 

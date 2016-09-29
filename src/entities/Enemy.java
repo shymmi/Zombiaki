@@ -154,9 +154,8 @@ public class Enemy {
         return this.HP;
     }
 
-    public void setHP(int damage) {
+    public void decreaseHP(int damage) {
         this.HP -= damage ;
     }
-
 }
 
