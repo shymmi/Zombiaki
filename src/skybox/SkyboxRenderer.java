@@ -82,19 +82,12 @@ public class SkyboxRenderer {
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
                 GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture);
-                ///bindTextures();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		shader.stopRendering();
 	}
-	
-//	private void bindTextures(){
-//		float blendFactor = 0.0f;			
-//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-//		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-//		shader.loadBlendFactor(blendFactor);
-//	}
+
 	
 	
 	

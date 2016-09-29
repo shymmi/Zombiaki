@@ -123,7 +123,7 @@ public class Player {
 
         float distance = CURRENT_SPEED * DisplayManager.getFrameTimeSeconds();
         float zDistance = TURNING_SPEED * DisplayManager.getFrameTimeSeconds();
- 
+        
         increasePosition(distance, 0, zDistance);
         
         if (POSITION.x <= 0 || POSITION.x >= 500 || POSITION.z <= -500 || POSITION.z >= 0) {

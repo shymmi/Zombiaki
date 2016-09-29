@@ -14,6 +14,7 @@ import guis.GuiRenderer;
 import guis.GuiTexture;
 import java.awt.Font;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import models.RawModel;
 import models.TexturedModel;
 import particles.ParticleMaster;
@@ -30,7 +31,7 @@ import toolbox.MousePicker;
 
 public class MainGameLoop {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         int TREES_COUNT = 50;
         int ENEMIES_COUNT = 10;
 
@@ -54,11 +55,11 @@ public class MainGameLoop {
         //objects declarations
         Terrain terrain = new Terrain(0, -1, loader, texturePack, texturesComposition, "wellington");
         
-        Light light1 = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
-        Light light2 = new Light(new Vector3f(10000, -10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
+        Light light1 = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.0f, 1.0f));
+        Light light2 = new Light(new Vector3f(-1000, 10000, 1000), new Vector3f(0.5f, 0.5f, 0.8f));
         
         RawModel treeModel = OBJLoader.loadObjModel("DeadTree", loader);        
-        TexturedModel treeTextureModel = new TexturedModel(treeModel, new ModelTexture(loader.loadTexture("mud")));
+        TexturedModel treeTextureModel = new TexturedModel(treeModel, new ModelTexture(loader.loadTexture("tree")));
         
         RawModel enemyModel = OBJLoader.loadObjModel("Alien", loader);        
         TexturedModel enemyTexturedModel = new TexturedModel(enemyModel, new ModelTexture(loader.loadTexture("alien")));
@@ -66,9 +67,9 @@ public class MainGameLoop {
         RawModel soldierModel = OBJLoader.loadObjModel("ArmyPilot", loader);        
         TexturedModel soldierTexturedModel = new TexturedModel(soldierModel, new ModelTexture(loader.loadTexture("soldier")));
         
-        Player player = new Player(0, soldierTexturedModel, new Vector3f(10, 5, -75), 0, 90, 0, 0.6f, 100);
+        Player player = new Player(0, soldierTexturedModel, new Vector3f(400, 300, -75), 0, -145, 0, 0.6f, 100);
         Camera camera = new Camera(player);  
-        GuiTexture gunpoint = new GuiTexture(loader.loadTexture("crosshair"), new Vector2f(0.02f, 0.2f), new Vector2f(0.05f, 0.1f));
+        GuiTexture gunpoint = new GuiTexture(loader.loadTexture("sight"), new Vector2f(0.02f, 0.2f), new Vector2f(0.05f, 0.1f));
         MousePicker mousePicker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
         ParticleSystem bleedingSystem = new ParticleSystem(20, 15, 0.1f, 1, 0.5f);
         
@@ -106,7 +107,8 @@ public class MainGameLoop {
         }
 
         guiTextures.add(gunpoint);
-
+        
+        boolean gameEnd = false;
         //game loop
         while (!Display.isCloseRequested()) {
             GUIText enemiesLeft = new GUIText("Enemies left: " + enemies.size(), 3f, font, new Vector2f(0f, 0f), 1f, false);
@@ -118,11 +120,13 @@ public class MainGameLoop {
             } else {
                 HealthPoints_Text = new GUIText("You were weak! Try again.", 3f, font, new Vector2f(0.3f, 0.5f), 1f, false);
                 HealthPoints_Text.setColour(1, 1, 0);
+                gameEnd = true;
             }
             
-            if(player.getHP() > 0 && enemies.size() == 0) {
+            if(player.getHP() > 0 && enemies.isEmpty()) {
                 GUIText youWinMessage = new GUIText("You win!", 3f, font, new Vector2f(0.44f, 0.4f), 1f, false);
                 youWinMessage.setColour(0, 1, 0);
+                gameEnd = true;
             }
             
             player.move(terrain);
@@ -152,6 +156,11 @@ public class MainGameLoop {
             DisplayManager.updateDisplay();
             HealthPoints_Text.updateGUI();
             enemiesLeft.updateGUI();
+            
+            if (gameEnd) {
+                Thread.sleep(2500);
+                break;
+            }
         }
 
         //Clean up
