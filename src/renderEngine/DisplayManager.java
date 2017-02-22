@@ -31,14 +31,14 @@ public class DisplayManager {
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH,HEIGHT));
 			Display.create(new PixelFormat(), attribs);
-			Display.setTitle("Our First Display!");
+			Display.setTitle("Beware of Zombies!");
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
 		 
-                        //mówimy mu gdzie ma renderować naszą gre
-                                 // LEWY GÓRNY, PRAWY DOLNY
+                        //renderowanie gry
+                        // LEWY GÓRNY, PRAWY DOLNY
 		GL11.glViewport(0,0, WIDTH, HEIGHT);
 		lastFrameTime = getCurrentTime();
                 

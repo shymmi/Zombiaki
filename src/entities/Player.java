@@ -182,10 +182,10 @@ public class Player {
         if (Mouse.isButtonDown(0)) {    
             float DESTINATION_Z_POSITION = POSITION.z;
             float DESTINATION_X_POSITION = POSITION.x;        
-            boolean isEnemyHitted = false;
+            boolean isEnemyHit = false;
             
             for (int j=0; j<400; j++) {
-                if (isEnemyHitted) {
+                if (isEnemyHit) {
                     break;
                 }
                  
@@ -201,7 +201,7 @@ public class Player {
                             a.decreaseHP(DAMAGE);
                         } else {
                             i.remove();  
-                            isEnemyHitted = true;
+                            isEnemyHit = true;
                             break;
                         }
                     }
