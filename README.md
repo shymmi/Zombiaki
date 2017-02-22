@@ -1,2 +1,2 @@
 # Zombiaki
-3D game where one can kill decent amount of zombies.
+3D game created with LWJGL, where one can kill decent amount of zombies.
